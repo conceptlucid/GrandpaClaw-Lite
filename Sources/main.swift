@@ -2,38 +2,44 @@ import SwiftUI
 
 @main
 struct GrandpaClawApp: App {
-    @State private var statusText = "Grandpa Claw is watching..."
-    
     var body: some Scene {
         MenuBarExtra {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("🦀").font(.system(size: 24))
-                    VStack(alignment: .leading) {
-                        Text("Grandpa Claw").font(.headline)
-                        Text(statusText).font(.caption).foregroundColor(.secondary)
-                    }
-                }
-                Divider()
-                Button("Ask Grandpa (WWGCD)") {
-                    NSWorkspace.shared.open(URL(string: "https://grandpaclaw.com/wwgcd")!)
-                }
-                Button("View Archive") {
-                    NSWorkspace.shared.open(URL(string: "https://grandpaclaw.com/archive")!)
-                }
-                Button("Join Waitlist") {
-                    NSWorkspace.shared.open(URL(string: "https://grandpaclaw.com/mac")!)
-                }
-                Divider()
-                Button("Quit") {
-                    NSApplication.shared.terminate(nil)
-                }
-            }
-            .padding()
-            .frame(width: 240)
+            MenuBarContent()
         } label: {
             Text("🦀")
         }
+    }
+}
+
+struct MenuBarContent: View {
+    @State private var statusText = "Grandpa Claw is online..."
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("🦀").font(.system(size: 24))
+                VStack(alignment: .leading) {
+                    Text("Grandpa Claw").font(.headline)
+                    Text(statusText).font(.caption).foregroundColor(.secondary)
+                }
+            }
+            Divider()
+            Button("Ask Grandpa (WWGCD)") {
+                NSWorkspace.shared.open(URL(string: "https://grandpaclaw.com/wwgcd")!)
+            }
+            Button("View Archive") {
+                NSWorkspace.shared.open(URL(string: "https://grandpaclaw.com/archive")!)
+            }
+            Button("Join Waitlist") {
+                NSWorkspace.shared.open(URL(string: "https://grandpaclaw.com/mac")!)
+            }
+            Divider()
+            Button("Quit") {
+                NSApplication.shared.terminate(nil)
+            }
+        }
+        .padding()
+        .frame(width: 240)
         .onAppear { fetchStatus() }
     }
     
