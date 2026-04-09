@@ -1,0 +1,45 @@
+name: Build GrandpaClaw Lite
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number'
+        required: true
+        default: '1.0.0'
+        type: string
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          swift build -c release 2>&1 | tail -20
+
+      - name: Package
+        run: |
+          BUILD_PATH=$(swift build -c release --show-build-path 2>/dev/null)
+          mkdir -p build
+          cp -R "$BUILD_PATH/GrandpaClaw" build/ 2>/dev/null || true
+          cd build && zip -r "GrandpaClaw-${{ inputs.version }}.zip" GrandpaClaw/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GrandpaClaw-mac-${{ inputs.version }}
+          path: build/**/*.zip
+          retention-days: 30
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          release_name: GrandpaClaw Lite v${{ inputs.version }}
+          artifact_path: build/**/*.zip
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
