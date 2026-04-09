@@ -18,7 +18,10 @@ jobs:
 
       - name: Build
         run: |
-          swift build -c release 2>&1 | tail -20
+          export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:$PATH"
+          which swift || echo "Swift not found"
+          swift --version || echo "Swift version failed"
+          swift build -c release 2>&1 | tail -40
 
       - name: Package
         run: |
