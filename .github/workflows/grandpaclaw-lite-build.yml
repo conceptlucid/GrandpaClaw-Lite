@@ -25,10 +25,12 @@ jobs:
 
       - name: Package
         run: |
-          BUILD_PATH=$(swift build -c release --show-build-path 2>/dev/null)
           mkdir -p build
-          cp -R "$BUILD_PATH/GrandpaClaw" build/ 2>/dev/null || true
-          cd build && zip -r "GrandpaClaw-${{ inputs.version }}.zip" GrandpaClaw/
+          ls -la .build/
+          cp -R .build/release/GrandpaClaw build/ 2>/dev/null || true
+          cd build
+          zip -r "GrandpaClaw-${{ inputs.version }}.zip" GrandpaClaw/ 2>/dev/null || zip -r "GrandpaClaw-${{ inputs.version }}.zip" . 2>/dev/null || echo "Zipping what we have"
+          ls -la
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
